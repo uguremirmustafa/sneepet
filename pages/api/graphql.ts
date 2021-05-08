@@ -7,6 +7,8 @@ const userRequestHeader = async (req, res) => {
   const headers = {};
   try {
     const { accessToken } = await getAccessToken(req, res);
+    // console.log(accessToken);
+
     headers['Authorization'] = `Bearer ${accessToken}`;
   } catch (error) {
     headers['X-Hasura-Role'] = 'public';

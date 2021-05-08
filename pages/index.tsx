@@ -3,12 +3,17 @@ import fetchGQL from '../utils/fetchql';
 import { gql } from 'graphql-request';
 import { hasuraAdminClient } from '../lib/client';
 import useSWR from 'swr';
+import SnippetForm from '../components/SnippetForm';
 
 const GetUsers = gql`
   {
     users {
       id
-      email
+      name
+    }
+    languages {
+      id
+      name
     }
   }
 `;
@@ -20,6 +25,7 @@ export default function Home({ users }) {
   });
   return (
     <div>
+      <SnippetForm languages={users.languages} />
       <pre>{JSON.stringify(users, null, 2)}</pre>
       {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
     </div>
