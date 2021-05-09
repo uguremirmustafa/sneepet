@@ -4,21 +4,25 @@
 .navbar {
   @include flex-ctr;
   background-color: $main-100;
-  font-weight: 900;
+  font-weight: 700;
   .innerNav {
     @include flex-bw;
     .logo {
       cursor: pointer;
-      display: flex;
-      align-items: center;
+      @include flex-ctr;
+      padding-right: $xl;
+      font-size: $lg;
+      font-weight: 900;
       span {
-        margin-left: 1rem;
+        margin-left: $md;
       }
     }
-
     ul {
-      display: flex;
-      gap: 1rem;
+      @include flex-ctr;
+      gap: $lg;
+      overflow: auto;
+      white-space: nowrap;
+      text-transform: capitalize;
     }
     max-width: $laptop;
     @include media($laptop) {
@@ -30,5 +34,14 @@
     @include media($mobile) {
       margin: 0 $sideMarginMobile;
     }
+  }
+}
+.avatarContainer {
+  @include flex-ctr;
+  gap: $md;
+  .avatar {
+    border: 2px solid $dark-100;
+    border-radius: 50%;
+    height: 2rem;
   }
 }

@@ -9,3 +9,11 @@ body {
   color: $dark-300;
   overflow-x: hidden;
 }
+
+a {
+  @include trns-ease;
+  color: $dark-300;
+  &:hover {
+    color: $main-300;
+  }
+}

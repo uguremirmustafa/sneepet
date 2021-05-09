@@ -1,0 +1,32 @@
+@use '../abstracts/' as *;
+@use '../base/variables' as *;
+.snippetPage {
+  display: grid;
+  grid-template-columns: 1fr;
+
+  @include media($tablet) {
+    grid-template-columns: 1fr;
+  }
+  .meta {
+    max-width: $tablet;
+    margin: auto;
+    width: 100%;
+    .title {
+      font-size: $f-2xl;
+      font-weight: 900;
+      line-height: 110%;
+      padding-bottom: $base;
+      border-bottom: 2px solid $gray-100;
+    }
+    .flex {
+      @include flex-bw;
+      color: $gray-300;
+      .author {
+        margin: $md 0;
+      }
+      .time {
+        font-size: $f-md;
+      }
+    }
+  }
+}

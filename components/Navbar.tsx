@@ -15,7 +15,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="innerNav">
         <div className="logo">
-          <Link href="/">logo</Link>
+          <Link href="/">Sneepet</Link>
         </div>
         <ul>
           <li>
@@ -25,8 +25,9 @@ export default function Navbar() {
             {isLoading && <div>loading...</div>}
             {error && <div>{error.message}</div>}
             {user ? (
-              <div>
-                {user.name}! <a href="/api/auth/logout">Logout</a>
+              <div className="avatarContainer">
+                <a href="/api/auth/logout">Logout</a>{' '}
+                <img src={user.picture} alt="avatar for user" className="avatar" />
               </div>
             ) : (
               <div>

@@ -1,4 +1,6 @@
 @use './colors' as *;
+@use "./fonts" as *;
+@use "../base/variables" as *;
 //media queries
 @mixin media($size) {
   @media only screen and (max-width: $size) {
@@ -58,12 +60,23 @@
 
 @mixin border-dark() {
   border: 1px solid $gray-300;
-  border-radius: 0.2rem;
+  border-radius: $sm;
   outline: none;
   &:hover {
     border: 1px solid $gray-200;
   }
   &:focus {
-    border: 1px solid $gray-100;
+    border: 1px solid $dark-300;
   }
+}
+
+@mixin box() {
+  background-color: $gray-100;
+  padding: $base;
+  border-radius: $md;
+  border: 1px solid $gray-200;
+}
+
+@mixin trns-ease() {
+  transition: all 0.2s ease-in-out;
 }

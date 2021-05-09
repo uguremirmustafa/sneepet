@@ -1,42 +1,32 @@
 import React from 'react';
 import fetchGQL from '../utils/fetchql';
-import { gql } from 'graphql-request';
 import { hasuraAdminClient } from '../lib/client';
 import useSWR from 'swr';
+import { GetPublicSnippets } from '../lib/queries/snippets';
 import SnippetForm from '../components/SnippetForm';
+import Snippet from '../components/Snippet';
 
-const GetUsers = gql`
-  {
-    users {
-      id
-      name
-    }
-    languages {
-      id
-      name
-    }
-  }
-`;
-
-export default function Home({ users }) {
-  const { data } = useSWR(GetUsers, (query) => fetchGQL(query), {
+export default function Home({ snippets }) {
+  const { data } = useSWR(GetPublicSnippets, (query) => fetchGQL(query), {
     revalidateOnMount: true,
-    revalidateOnFocus: true,
+    initialData: snippets,
   });
   return (
     <div>
-      {/* <pre>{JSON.stringify(users, null, 2)}</pre> */}
-      {/* {data && <pre>{JSON.stringify(data, null, 2)}</pre>} */}
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+      {data.snippets.map((item) => (
+        <Snippet key={item.id} snippet={item} />
+      ))}
     </div>
   );
 }
 
 export async function getStaticProps() {
-  const users = await hasuraAdminClient.request(GetUsers);
+  const data = await hasuraAdminClient.request(GetPublicSnippets);
 
   return {
     props: {
-      users,
+      snippets: data,
     },
   };
 }
