@@ -1,12 +1,15 @@
-import { useUser } from '@auth0/nextjs-auth0';
+import { UserProfile, useUser } from '@auth0/nextjs-auth0';
 import Link from 'next/link';
 import React from 'react';
 
-export default function Navbar() {
-  const { user, error, isLoading } = useUser();
+type UserContext = {
+  user?: UserProfile;
+  error?: Error;
+  isLoading: boolean;
+};
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error.message}</div>;
+export default function Navbar() {
+  const { user, error, isLoading }: UserContext = useUser();
 
   return (
     <nav className="navbar">
@@ -14,6 +17,8 @@ export default function Navbar() {
         <div className="logo">logo</div>
         <ul>
           <li>
+            {isLoading && <div>loading...</div>}
+            {error && <div>{error.message}</div>}
             {user ? (
               <div>
                 {user.name}! <a href="/api/auth/logout">Logout</a>
