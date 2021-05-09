@@ -25,7 +25,6 @@ export default function Home({ users }) {
   });
   return (
     <div>
-      <SnippetForm languages={users.languages} />
       {/* <pre>{JSON.stringify(users, null, 2)}</pre> */}
       {/* {data && <pre>{JSON.stringify(data, null, 2)}</pre>} */}
     </div>

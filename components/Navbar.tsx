@@ -14,8 +14,13 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="innerNav">
-        <div className="logo">logo</div>
+        <div className="logo">
+          <Link href="/">logo</Link>
+        </div>
         <ul>
+          <li>
+            <Link href="/add">Create a snippet</Link>
+          </li>
           <li>
             {isLoading && <div>loading...</div>}
             {error && <div>{error.message}</div>}
