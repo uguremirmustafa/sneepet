@@ -1,0 +1,11 @@
+@use 'abstracts' as *;
+@use 'base/reset';
+@use 'layout';
+@use 'components';
+@use 'pages';
+
+body {
+  min-height: 100vh;
+  color: $dark-300;
+  overflow-x: hidden;
+}

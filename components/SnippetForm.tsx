@@ -47,13 +47,14 @@ export default function SnippetForm({ languages }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="form">
       <label htmlFor="title">Title</label>
       <input
         {...register('title', {
           required: 'This field is required',
           maxLength: { value: 96, message: 'You exceeded the length' },
         })}
+        type="text"
         id="title"
       />
       {errors.title && <p>{errors.title.message}</p>}
@@ -64,26 +65,33 @@ export default function SnippetForm({ languages }) {
           maxLength: { value: 300, message: 'You exceeded the length' },
         })}
         id="description"
+        type="text"
       />
       {errors.description && <p>{errors.description.message}</p>}
+      <div className="form-flex">
+        <div>
+          <label htmlFor="languageId">Language</label>
+          <select
+            {...register('languageId', {
+              required: "You haven't selected the language",
+            })}
+            id="languageId"
+          >
+            <option value="">Select...</option>
+            {languages.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+          {errors.languageId && <p>{errors.languageId.message}</p>}
+        </div>
+        <div>
+          <label htmlFor="public">Is it going to be public</label>
+          <input type="checkbox" {...register('public')} defaultChecked />
+        </div>
+      </div>
 
-      <label htmlFor="languageId">Language</label>
-      <select
-        {...register('languageId', {
-          required: "You haven't selected the language",
-        })}
-        id="languageId"
-      >
-        <option value="">Select...</option>
-        {languages.map((item) => (
-          <option key={item.id} value={item.id}>
-            {item.name}
-          </option>
-        ))}
-      </select>
-      {errors.languageId && <p>{errors.languageId.message}</p>}
-      <label htmlFor="public">Is it going to be public</label>
-      <input type="checkbox" {...register('public')} defaultChecked />
       <label htmlFor="code">Enter your awesome snippet</label>
       <input
         {...register('code', {
@@ -91,6 +99,7 @@ export default function SnippetForm({ languages }) {
           maxLength: { value: 300, message: 'You exceeded the length' },
         })}
         id="code"
+        type="text"
       />
       {errors.code && <p>{errors.code.message}</p>}
       <button type="submit">submit</button>

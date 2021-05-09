@@ -1,0 +1,19 @@
+@use '../abstracts/' as *;
+.btn {
+  border-radius: 0.3rem;
+  color: $light;
+  font-weight: 600;
+  border: none;
+  background-color: $main-200;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  text-transform: capitalize;
+  height: min-content;
+  min-width: 2rem;
+  &:disabled {
+    background-color: $dark-300;
+  }
+  &:hover {
+    background-color: $dark-300;
+  }
+}

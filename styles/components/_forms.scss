@@ -1,0 +1,48 @@
+@use '../abstracts/' as *;
+@use '../base/' as *;
+.form {
+  display: grid;
+  max-width: $mobile;
+
+  input,
+  select,
+  label,
+  textarea {
+    display: block;
+  }
+  input,
+  select,
+  textarea {
+    margin-bottom: $md;
+  }
+  label {
+    margin-bottom: $sm;
+  }
+  input[type='text'] {
+    width: 100%;
+    @include border-dark;
+    padding: $md;
+  }
+  select {
+    width: 100%;
+    padding: $md;
+    @include border-dark;
+  }
+  button {
+    @include border-dark;
+    padding: $md;
+  }
+  .form-flex {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $xl;
+    div {
+      width: 100%;
+    }
+  }
+  p {
+    color: $main-300;
+    font-size: $f-sm;
+    padding: $xs 0 $md;
+  }
+}

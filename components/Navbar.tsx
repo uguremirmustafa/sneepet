@@ -7,17 +7,25 @@ export default function Navbar() {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
-  if (user) {
-    return (
-      <div>
-        Welcome {user.name}! <a href="/api/auth/logout">Logout</a>
+
+  return (
+    <nav className="navbar">
+      <div className="innerNav">
+        <div className="logo">logo</div>
+        <ul>
+          <li>
+            {user ? (
+              <div>
+                {user.name}! <a href="/api/auth/logout">Logout</a>
+              </div>
+            ) : (
+              <div>
+                <Link href="/api/auth/login">login</Link>
+              </div>
+            )}
+          </li>
+        </ul>
       </div>
-    );
-  } else {
-    return (
-      <div>
-        <Link href="/api/auth/login">login</Link>
-      </div>
-    );
-  }
+    </nav>
+  );
 }
