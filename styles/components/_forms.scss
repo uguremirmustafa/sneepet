@@ -8,8 +8,19 @@
   }
   gap: $xl;
   .form {
-    display: block;
-    max-width: $tablet;
+    grid-column: 1/3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    @include media($tablet) {
+      grid-template-columns: 1fr;
+      .firstColumn {
+        grid-column: 1/3;
+      }
+      button {
+        grid-column: 1/3;
+      }
+    }
 
     input,
     select,
@@ -45,10 +56,14 @@
       padding: $md;
       @include border-dark;
     }
+    textarea {
+      resize: vertical;
+    }
     button {
       @include border-dark;
       padding: $md;
       width: 100%;
+      grid-column: 1/3;
     }
     .form-flex {
       display: grid;
@@ -62,6 +77,24 @@
       color: $main-300;
       font-size: $f-sm;
       padding: $xs 0 $md;
+    }
+  }
+  .highlighted {
+    grid-column: 1/3;
+    height: min-content;
+    position: relative;
+    .langBadge {
+      color: $gray-300;
+      font-weight: 900;
+      background-color: $gray-100;
+      padding: $md;
+      border-radius: $md;
+      position: absolute;
+      right: -5px;
+      top: 2px;
+      z-index: 10;
+      font-size: $f-md;
+      border: $gray-300 2px solid;
     }
   }
 }

@@ -3,7 +3,7 @@
 
 .navbar {
   @include flex-ctr;
-  background-color: $main-100;
+  background-color: $gray-100;
   font-weight: 700;
   .innerNav {
     @include flex-bw;

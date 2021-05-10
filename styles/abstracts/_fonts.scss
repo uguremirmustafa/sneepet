@@ -25,6 +25,13 @@
     /* Chrome 26+, Opera 23+, Firefox 39+ */ url('/fonts/nunito-v16-latin-ext-900.woff')
       format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+$f-sm: 0.75rem;
+$f-md: 0.825rem;
+$f-base: 1rem;
+$f-lg: 1.25rem;
+$f-xl: 1.75rem;
+$f-2xl: 2.5rem;
+$f-3xl: 4rem;
 
 html {
   font-family: 'Nunito';
@@ -33,10 +40,15 @@ html {
   font-weight: 700;
 }
 
-$f-sm: 0.75rem;
-$f-md: 0.825rem;
-$f-base: 1rem;
-$f-lg: 1.25rem;
-$f-xl: 1.75rem;
-$f-2xl: 2.5rem;
-$f-3xl: 4rem;
+h1 {
+  margin-bottom: 0.75rem;
+}
+h2 {
+  margin-bottom: 0.6rem;
+}
+h3 {
+  margin-bottom: 0.5rem;
+}
+h4 {
+  margin-bottom: 0.4rem;
+}

@@ -7,10 +7,15 @@
   @include media($tablet) {
     grid-template-columns: 1fr;
   }
+  max-width: $tablet;
+  margin: auto;
+  width: 100%;
   .meta {
-    max-width: $tablet;
-    margin: auto;
-    width: 100%;
+    position: relative;
+    padding-bottom: $base;
+    border-bottom: 2px solid $gray-100;
+    margin-bottom: $xl;
+
     .title {
       font-size: $f-2xl;
       font-weight: 900;
@@ -27,6 +32,28 @@
       .time {
         font-size: $f-md;
       }
+      .like {
+        @include flex-ctr;
+        gap: $md;
+        font-size: $f-md;
+        svg {
+          width: $lg;
+          cursor: pointer;
+        }
+        svg.liked {
+          fill: $main-200;
+        }
+      }
+      .language a {
+        color: $main-300;
+        font-size: $f-base;
+        font-weight: 700;
+      }
+    }
+  }
+  .content {
+    .description {
+      margin-bottom: $xl;
     }
   }
 }

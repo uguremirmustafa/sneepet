@@ -13,18 +13,22 @@ import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
 import php from 'react-syntax-highlighter/dist/cjs/languages/prism/php';
 import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
 import { materialOceanic } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { useUser } from '@auth0/nextjs-auth0';
 SyntaxHighlighter.registerLanguage('jsx', jsx);
 SyntaxHighlighter.registerLanguage('js', js);
 SyntaxHighlighter.registerLanguage('css', css);
 SyntaxHighlighter.registerLanguage('php', php);
+
 const today = new Date();
 
 export default function SingleSnippet({ data: initialData }) {
   const router = useRouter();
   const { id } = router.query;
+  const { user } = useUser();
+
   const {
     data: { snippets_by_pk: snippet },
-  } = useSWR(GetSnippetById, (query) => fetchGQL(query, { id }), {
+  } = useSWR(user ? GetSnippetById : null, (query) => fetchGQL(query, { id }), {
     revalidateOnMount: true,
     initialData,
   });
@@ -38,6 +42,7 @@ export default function SingleSnippet({ data: initialData }) {
       aggregate: { count },
     },
     code,
+    description,
   } = snippet;
   const edited = created_at !== updated_at;
   console.log(snippet);
@@ -51,27 +56,32 @@ export default function SingleSnippet({ data: initialData }) {
       <div className="meta">
         <h1 className="title">{title}</h1>
         <div className="flex">
-          <h3 className="author">@{authorName}</h3>
+          <h3 className="author">@{authorName ? authorName : 'unknown user'}</h3>
           <p className="time">
             {edited && <p>edited</p>}
             {timeAgo}
           </p>
         </div>
-        <div>
-          <Link href={`/language/${slug}`}>{name}</Link>
-        </div>
-        <div className="like">
-          <p>
-            {count} {count > 1 ? 'likes' : 'like'}
-          </p>
-
-          <svg viewBox="0 0 24 24" width="24" height="24" className={userLiked ? 'liked' : ''}>
-            <path fill="none" d="M0 0H24V24H0z" />
-            <path d="M12.001 4.529c2.349-2.109 5.979-2.039 8.242.228 2.262 2.268 2.34 5.88.236 8.236l-8.48 8.492-8.478-8.492c-2.104-2.356-2.025-5.974.236-8.236 2.265-2.264 5.888-2.34 8.244-.228z" />
-          </svg>
+        <div className="flex">
+          <div className="language">
+            <Link href={`/language/${slug}`}>{name}</Link>
+          </div>
+          <div className="like">
+            <p>
+              {count} {count > 1 ? 'likes' : 'like'}
+            </p>
+            <svg viewBox="0 0 24 24" className={userLiked ? 'liked' : ''}>
+              <path fill="none" d="M0 0H24V24H0z" />
+              <path d="M12.001 4.529c2.349-2.109 5.979-2.039 8.242.228 2.262 2.268 2.34 5.88.236 8.236l-8.48 8.492-8.478-8.492c-2.104-2.356-2.025-5.974.236-8.236 2.265-2.264 5.888-2.34 8.244-.228z" />
+            </svg>
+          </div>
         </div>
       </div>
-      <div>
+      <div className="content">
+        <div className="description">
+          <h3>Description</h3>
+          <p>{description}</p>
+        </div>
         <SyntaxHighlighter
           style={materialOceanic}
           wrapLines={true}

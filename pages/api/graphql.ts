@@ -7,7 +7,6 @@ const userRequestHeader = async (req, res) => {
   const headers = {};
   try {
     const { accessToken } = await getAccessToken(req, res);
-    // console.log(accessToken);
 
     headers['Authorization'] = `Bearer ${accessToken}`;
   } catch (error) {
@@ -21,10 +20,12 @@ export default async function graphql(req: NextApiRequest, res: NextApiResponse)
   try {
     // Get user acces_token IF available
     const headers = await userRequestHeader(req, res);
-
+    const { query, variables, admin } = req.body;
+    if (admin) {
+      headers['x-hasura-admin-secret'] = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
+    }
     const graphQLClient = new GraphQLClient(endpoint);
     graphQLClient.setHeaders(headers);
-    const { query, variables } = req.body;
     const data = await graphQLClient.request(query, variables);
     res.send(data);
   } catch (error) {
