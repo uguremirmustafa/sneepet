@@ -1,7 +1,7 @@
 import React from 'react';
 import { formatRelative } from 'date-fns';
 import Link from 'next/link';
-const today = new Date();
+let today: Date = new Date();
 
 export default function Snippet({ snippet }) {
   const {

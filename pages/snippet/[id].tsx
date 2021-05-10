@@ -19,7 +19,7 @@ SyntaxHighlighter.registerLanguage('js', js);
 SyntaxHighlighter.registerLanguage('css', css);
 SyntaxHighlighter.registerLanguage('php', php);
 
-const today = new Date();
+let today: Date = new Date();
 
 export default function SingleSnippet({ data: initialData }) {
   const router = useRouter();

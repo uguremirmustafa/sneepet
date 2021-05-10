@@ -2,6 +2,7 @@ import React from 'react';
 import { gql } from 'graphql-request';
 import { hasuraAdminClient } from '../lib/client';
 import SnippetForm from '../components/SnippetForm';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 const GetLanguages = gql`
   {
     languages {
@@ -10,13 +11,13 @@ const GetLanguages = gql`
     }
   }
 `;
-export default function Add({ languages }) {
+const Add = ({ languages }) => {
   return (
     <div>
       <SnippetForm languages={languages.languages} />
     </div>
   );
-}
+};
 export async function getStaticProps() {
   const languages = await hasuraAdminClient.request(GetLanguages);
 
@@ -26,3 +27,4 @@ export async function getStaticProps() {
     },
   };
 }
+export default withPageAuthRequired(Add);
