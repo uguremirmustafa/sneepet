@@ -1,19 +1,23 @@
 @use '../abstracts/' as *;
+@use '../base/variables' as *;
 .btn {
-  border-radius: 0.3rem;
-  color: $light;
-  font-weight: 600;
+  border-radius: $sm;
+  color: $dark-300;
+  font-weight: 700;
   border: none;
-  background-color: $main-200;
-  padding: 0.4rem 0.6rem;
+  outline: none;
+  background-color: $gray-100;
+  padding: $md $base;
   cursor: pointer;
-  text-transform: capitalize;
+  text-transform: lowercase;
   height: min-content;
   min-width: 2rem;
+  @include trns-ease();
   &:disabled {
-    background-color: $dark-300;
+    background-color: $gray-300;
   }
   &:hover {
-    background-color: $dark-300;
+    color: $main-300;
+    fill: $main-300;
   }
 }

@@ -46,6 +46,7 @@ export const GetSnippetById = gql`
       id
       author {
         name
+        id
       }
       code
       created_at
@@ -65,6 +66,10 @@ export const GetSnippetById = gql`
         user_id
         id
       }
+    }
+    languages {
+      id
+      name
     }
   }
 `;
@@ -116,6 +121,29 @@ export const CreateSnippet = gql`
     }
   }
 `;
+export const UpdateSnippet = gql`
+  mutation UpdateSnippet(
+    $snippetId: uuid!
+    $code: String!
+    $languageId: uuid!
+    $title: String!
+    $description: String!
+    $public: Boolean
+  ) {
+    update_snippets_by_pk(
+      pk_columns: { id: $snippetId }
+      _set: {
+        code: $code
+        language_id: $languageId
+        title: $title
+        description: $description
+        public: $public
+      }
+    ) {
+      id
+    }
+  }
+`;
 
 export const InsertLike = gql`
   mutation InsertLike($snippetId: uuid!) {
@@ -127,6 +155,14 @@ export const InsertLike = gql`
 export const DeleteLike = gql`
   mutation DeleteLike($likeId: uuid!) {
     delete_likes_by_pk(id: $likeId) {
+      id
+    }
+  }
+`;
+
+export const DeleteSnippet = gql`
+  mutation DeleteSnippet($snippetId: uuid!) {
+    delete_snippets_by_pk(id: $snippetId) {
       id
     }
   }

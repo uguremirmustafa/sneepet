@@ -3,7 +3,7 @@ import fetchGQL from '../utils/fetchql';
 import { hasuraAdminClient } from '../lib/client';
 import useSWR from 'swr';
 import { GetPublicSnippets } from '../lib/queries/snippets';
-import Snippet from '../components/Snippet';
+import SnippetPreviewCard from '../components/SnippetPreviewCard';
 import { UserProfile, useUser } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
 
@@ -26,7 +26,7 @@ export default function Home({ snippets }) {
       {isLoading && <div>loading...</div>}
       {error && <div>{error.message}</div>}
       {data.snippets.map((item) => (
-        <Snippet key={item.id} snippet={item} />
+        <SnippetPreviewCard key={item.id} snippet={item} />
       ))}
     </div>
   );

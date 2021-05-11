@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import fetchGQL from '../../utils/fetchql';
 import { UserProfile, useUser } from '@auth0/nextjs-auth0';
-import Snippet from '../../components/Snippet';
+import SnippetPreviewCard from '../../components/SnippetPreviewCard';
 
 type UserContext = {
   user?: UserProfile;
@@ -33,7 +33,7 @@ export default function Home({ snippets }) {
       {isLoading && <div>loading...</div>}
       {error && <div>{error.message}</div>}
       {data.snippets.map((item) => (
-        <Snippet key={item.id} snippet={item} />
+        <SnippetPreviewCard key={item.id} snippet={item} />
       ))}
     </div>
   );

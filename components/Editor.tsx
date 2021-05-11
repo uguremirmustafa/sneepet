@@ -10,7 +10,7 @@ SyntaxHighlighter.registerLanguage('js', js);
 SyntaxHighlighter.registerLanguage('css', css);
 SyntaxHighlighter.registerLanguage('php', php);
 const EditorPage = ({ code, languages, selectedLangId }) => {
-  const lang = languages.filter((item) => item.id === selectedLangId)[0]?.name;
+  const lang = languages?.filter((item) => item.id === selectedLangId)[0]?.name;
   return (
     <>
       <span className="langBadge">{lang ? lang : 'no language selected'}</span>

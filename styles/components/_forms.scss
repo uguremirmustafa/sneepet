@@ -7,6 +7,21 @@
     grid-template-columns: 1fr;
   }
   gap: $xl;
+  .header {
+    @include flex-bw;
+    grid-column: 1/3;
+    h2 {
+      font-size: $f-xl;
+      font-weight: 900;
+    }
+    .editIconWrapper {
+      @include flex-ctr;
+      gap: $md;
+      svg {
+        width: 20px;
+      }
+    }
+  }
   .form {
     grid-column: 1/3;
     display: grid;
