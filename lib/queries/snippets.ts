@@ -61,6 +61,10 @@ export const GetSnippetById = gql`
           count
         }
       }
+      likes {
+        user_id
+        id
+      }
     }
   }
 `;
@@ -87,6 +91,43 @@ export const GetSnippetByLanguageSlug = gql`
           count
         }
       }
+    }
+  }
+`;
+
+export const CreateSnippet = gql`
+  mutation (
+    $code: String!
+    $languageId: uuid!
+    $title: String!
+    $description: String!
+    $public: Boolean
+  ) {
+    insert_snippets_one(
+      object: {
+        code: $code
+        language_id: $languageId
+        title: $title
+        description: $description
+        public: $public
+      }
+    ) {
+      id
+    }
+  }
+`;
+
+export const InsertLike = gql`
+  mutation InsertLike($snippetId: uuid!) {
+    insert_likes_one(object: { snippet_id: $snippetId }) {
+      id
+    }
+  }
+`;
+export const DeleteLike = gql`
+  mutation DeleteLike($likeId: uuid!) {
+    delete_likes_by_pk(id: $likeId) {
+      id
     }
   }
 `;

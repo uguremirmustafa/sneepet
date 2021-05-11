@@ -5,11 +5,14 @@
   padding-left: 0;
   display: grid;
   grid-template-columns: 6rem 1fr;
+  width: 100%;
+  overflow-x: hidden;
+
   .like {
     grid-row: 1/6;
     flex-direction: column;
     @include flex-ctr;
-    font-size: $f-md;
+    font-size: $f-sm;
     svg {
       width: $xl;
       cursor: pointer;
@@ -18,23 +21,39 @@
       fill: $main-200;
     }
   }
-  .title {
-    border-bottom: 1px solid $gray-200;
-    padding-bottom: $sm;
-    margin-bottom: $md;
-    font-size: $f-lg;
-  }
-  .meta {
-    font-size: $f-md;
-    @include flex-bw;
-    margin-bottom: $md;
-    .language a {
-      padding-left: $xs;
-      color: $main-300;
+  .content {
+    .title {
+      border-bottom: 1px solid $gray-200;
+      padding-bottom: $sm;
+      margin-bottom: $md;
+      font-size: $f-lg;
+      width: 100%;
+      word-break: break-all;
+      //text-truncate
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
-  }
-  .description {
-    margin: $sm 0;
+    .meta {
+      font-size: $f-md;
+      @include flex-bw;
+      margin-bottom: $md;
+      .language a {
+        padding-left: $xs;
+        color: $main-300;
+      }
+    }
+    .description {
+      margin-top: $sm;
+      //text-truncate
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
   }
 
   @include media($mobile) {

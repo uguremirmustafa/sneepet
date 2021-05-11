@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import fetchGQL from '../utils/fetchql';
 import EditorPage from './Editor';
-
+import { CreateSnippet } from '../lib/queries/snippets';
 type FormValues = {
   title: string;
   description: string;
@@ -12,31 +12,7 @@ type FormValues = {
   code: string;
 };
 
-const CreateSnippet = gql`
-  mutation(
-    $code: String!
-    $languageId: uuid!
-    $title: String!
-    $description: String!
-    $public: Boolean
-  ) {
-    insert_snippets_one(
-      object: {
-        code: $code
-        language_id: $languageId
-        title: $title
-        description: $description
-        public: $public
-      }
-    ) {
-      id
-    }
-  }
-`;
-
 export default function SnippetForm({ languages }) {
-  const [editorLanguage, setEditorLanguage] = useState('javascript');
-
   const {
     register,
     handleSubmit,
@@ -63,7 +39,7 @@ export default function SnippetForm({ languages }) {
           <input
             {...register('title', {
               required: 'This field is required',
-              maxLength: { value: 96, message: 'You exceeded the length' },
+              maxLength: { value: 200, message: 'You exceeded the length' },
             })}
             type="text"
             id="title"
@@ -74,7 +50,7 @@ export default function SnippetForm({ languages }) {
           <textarea
             {...register('description', {
               required: 'This field is required',
-              maxLength: { value: 10000, message: 'You exceeded the length' },
+              maxLength: { value: 100000, message: 'You exceeded the length' },
             })}
             id="description"
             className="description"
@@ -111,7 +87,7 @@ export default function SnippetForm({ languages }) {
           <textarea
             {...register('code', {
               required: 'This field is required',
-              maxLength: { value: 300, message: 'You exceeded the length' },
+              maxLength: { value: 300000, message: 'You exceeded the length' },
             })}
             id="code"
             rows={15}

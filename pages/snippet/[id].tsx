@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GetStaticPropsContext } from 'next';
 import { hasuraAdminClient } from '../../lib/client';
-import { GetSnippetById, GetSnippetIds } from '../../lib/queries/snippets';
-import useSWR from 'swr';
+import { GetSnippetById, GetSnippetIds, InsertLike, DeleteLike } from '../../lib/queries/snippets';
+import useSWR, { trigger } from 'swr';
 import { useRouter } from 'next/router';
 import fetchGQL from '../../utils/fetchql';
 import { formatRelative } from 'date-fns';
@@ -13,7 +13,7 @@ import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
 import php from 'react-syntax-highlighter/dist/cjs/languages/prism/php';
 import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
 import { materialOceanic } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { useUser } from '@auth0/nextjs-auth0';
+import { UserProfile, useUser } from '@auth0/nextjs-auth0';
 SyntaxHighlighter.registerLanguage('jsx', jsx);
 SyntaxHighlighter.registerLanguage('js', js);
 SyntaxHighlighter.registerLanguage('css', css);
@@ -21,17 +21,27 @@ SyntaxHighlighter.registerLanguage('php', php);
 
 let today: Date = new Date();
 
-export default function SingleSnippet({ data: initialData }) {
-  const router = useRouter();
-  const { id } = router.query;
-  const { user } = useUser();
+type UserContext = {
+  user?: UserProfile;
+  error?: Error;
+  isLoading: boolean;
+};
 
-  const {
-    data: { snippets_by_pk: snippet },
-  } = useSWR(user ? GetSnippetById : null, (query) => fetchGQL(query, { id }), {
-    revalidateOnMount: true,
-    initialData,
-  });
+export default function SingleSnippet({ data: initialData }) {
+  const [likeId, setLikeId] = useState('');
+  const router = useRouter();
+  const { user }: UserContext = useUser();
+  const { id, isFallback } = router.query;
+  const { data, mutate } = useSWR(
+    user ? [GetSnippetById, id] : null,
+    (query) => fetchGQL(query, { id }),
+    {
+      revalidateOnMount: true,
+      initialData,
+    }
+  );
+
+  if (!isFallback && !data) return <p>No such content found</p>;
   const {
     title,
     author: { name: authorName },
@@ -43,14 +53,38 @@ export default function SingleSnippet({ data: initialData }) {
     },
     code,
     description,
-  } = snippet;
+    likes,
+  } = data.snippets_by_pk;
+
+  const handleLike = async (snippetId) => {
+    let temp = { ...data };
+    temp.snippets_by_pk.likes_aggregate.aggregate.count = count + 1;
+    mutate({ ...data, temp });
+    const res = await fetchGQL(InsertLike, { snippetId });
+    trigger([GetSnippetById, id]);
+    if (res.insert_likes_one) {
+      setLikeId(res.insert_likes_one.id);
+    }
+  };
+
+  const handleUnlike = async (likeId) => {
+    let temp = { ...data };
+    temp.snippets_by_pk.likes_aggregate.aggregate.count = count - 1;
+
+    mutate({ ...data, temp });
+    await fetchGQL(DeleteLike, { likeId });
+    trigger([GetSnippetById, id]);
+  };
+
   const edited = created_at !== updated_at;
-  console.log(snippet);
+
   const timeAgo = formatRelative(Date.parse(edited ? updated_at : created_at), today, {
     weekStartsOn: 1,
   });
 
-  const userLiked = false;
+  const userLiked = likes.filter((item) => item.user_id === user?.sub).length > 0;
+
+  if (isFallback) return <div>Loading...</div>;
   return (
     <div className="snippetPage">
       <div className="meta">
@@ -67,10 +101,12 @@ export default function SingleSnippet({ data: initialData }) {
             <Link href={`/language/${slug}`}>{name}</Link>
           </div>
           <div className="like">
-            <p>
-              {count} {count > 1 ? 'likes' : 'like'}
-            </p>
-            <svg viewBox="0 0 24 24" className={userLiked ? 'liked' : ''}>
+            <p>{count === 0 ? 'no likes' : count > 1 ? `${count} likes` : '1 like'}</p>
+            <svg
+              viewBox="0 0 24 24"
+              className={userLiked ? 'liked' : ''}
+              onClick={userLiked ? () => handleUnlike(likeId) : () => handleLike(id)}
+            >
               <path fill="none" d="M0 0H24V24H0z" />
               <path d="M12.001 4.529c2.349-2.109 5.979-2.039 8.242.228 2.262 2.268 2.34 5.88.236 8.236l-8.48 8.492-8.478-8.492c-2.104-2.356-2.025-5.974.236-8.236 2.265-2.264 5.888-2.34 8.244-.228z" />
             </svg>
@@ -109,7 +145,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     props: {
       data,
     },
-    revalidate: 30,
+    revalidate: 1,
   };
 }
 export async function getStaticPaths<GetStaticPaths>() {
@@ -117,6 +153,6 @@ export async function getStaticPaths<GetStaticPaths>() {
   const paths = snippets.map((item) => ({ params: item }));
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 }

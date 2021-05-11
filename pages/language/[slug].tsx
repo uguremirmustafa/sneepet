@@ -23,8 +23,8 @@ export default function Home({ snippets }) {
     (query) => fetchGQL(query, { slug }),
     {
       revalidateOnMount: true,
+      revalidateOnFocus: true,
       initialData: snippets,
-      revalidateOnFocus: false,
     }
   );
 
@@ -46,7 +46,6 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     props: {
       snippets: data,
     },
-    revalidate: 30,
   };
 }
 export async function getStaticPaths<GetStaticPaths>() {
