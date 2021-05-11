@@ -22,17 +22,18 @@ export default function Navbar() {
             <Link href="/add">Create a snippet</Link>
           </li>
           <li>
-            {isLoading && <div>loading...</div>}
-            {error && <div>{error.message}</div>}
+            <Link href="/profile">Profile</Link>
+          </li>
+          <li>
+            {isLoading && <a>loading...</a>}
+            {error && <a>{error.message}</a>}
             {user ? (
               <div className="avatarContainer">
                 <a href="/api/auth/logout">Logout</a>{' '}
                 <img src={user.picture} alt="avatar for user" className="avatar" />
               </div>
             ) : (
-              <div>
-                <Link href="/api/auth/login">login</Link>
-              </div>
+              <Link href="/api/auth/login">login</Link>
             )}
           </li>
         </ul>

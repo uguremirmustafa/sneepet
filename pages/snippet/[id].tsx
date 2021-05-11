@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GetStaticPropsContext } from 'next';
 import { hasuraAdminClient } from '../../lib/client';
 import {
@@ -85,16 +85,17 @@ export default function SingleSnippet({ data: initialData }) {
   };
 
   const handleDelete = async (snippetId) => {
-    const res = await fetchGQL(DeleteSnippet, { snippetId });
-    if (res.id) {
-      router.push('/');
-    }
+    await fetchGQL(DeleteSnippet, { snippetId });
+    router.push('/');
   };
 
   const [editing, setEditing] = useState(false);
   const toggleEditing = () => {
     setEditing((v) => !v);
   };
+  useEffect(() => {
+    trigger([GetSnippetById, id]);
+  }, [editing]);
 
   const edited = created_at !== updated_at;
 

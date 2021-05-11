@@ -80,3 +80,12 @@
 @mixin trns-ease() {
   transition: all 0.2s ease-in-out;
 }
+
+@mixin truncate($line) {
+  //text-truncate
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+}

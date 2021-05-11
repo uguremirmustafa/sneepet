@@ -14,7 +14,7 @@ const GetLanguages = gql`
 const Add = ({ languages }) => {
   return (
     <div>
-      <SnippetForm languages={languages.languages} defaultValues={{}} />
+      <SnippetForm languages={languages.languages} />
     </div>
   );
 };

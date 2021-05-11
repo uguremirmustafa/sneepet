@@ -1,11 +1,10 @@
-import { gql } from 'graphql-request';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import fetchGQL from '../utils/fetchql';
 import CodePreview from './Editor';
 import { CreateSnippet, UpdateSnippet } from '../lib/queries/snippets';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+
 type FormValues = {
   title: string;
   description: string;
@@ -14,16 +13,8 @@ type FormValues = {
   code: string;
 };
 
-export default function SnippetForm({
-  languages,
-  code,
-  description,
-  languageId,
-  title,
-  editing,
-  toggleEditing,
-  snippetId,
-}) {
+export default function SnippetForm({ languages, ...rest }) {
+  const { code, description, languageId, title, editing, toggleEditing, snippetId } = rest;
   const {
     register,
     handleSubmit,
