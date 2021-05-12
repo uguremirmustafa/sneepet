@@ -42,22 +42,24 @@ export default function Profile() {
 
   return (
     <div className="profile">
-      <h2>My Profile</h2>
+      <h2 className="pageTitle">My Profile</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="form">
-        <h3>User Details</h3>
-        <label htmlFor="name">Name</label>
-        <input
-          {...register('name', {
-            required: 'This field is required',
-            maxLength: { value: 200, message: 'You exceeded the length' },
-          })}
-          type="text"
-          id="name"
-        />
-        {errors.name && <p>{errors.name.message}</p>}
-        <button type="submit">{isSubmitting ? 'Saving' : 'Save changes'}</button>
-      </form>
+      <div className="profileDetails">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <h3>User Details</h3>
+          <label htmlFor="name">Name</label>
+          <input
+            {...register('name', {
+              required: 'This field is required',
+              maxLength: { value: 200, message: 'You exceeded the length' },
+            })}
+            type="text"
+            id="name"
+          />
+          {errors.name && <p>{errors.name.message}</p>}
+          <button type="submit">{isSubmitting ? 'Saving' : 'Save changes'}</button>
+        </form>
+      </div>
       <div>
         <h3>My snippets</h3>
         {data
@@ -65,10 +67,12 @@ export default function Profile() {
               const snippetCreatedAt = timeAgo(item.created_at);
 
               return (
-                <div className="snippetTitle">
+                <div className="snippetLine">
                   <Link href={`/snippet/${item.id}`}>{item.title}</Link>
-                  <span>{snippetCreatedAt}</span>
-                  {item.public ? 'public' : 'private'}
+                  <div className="snippetMeta">
+                    <span>{snippetCreatedAt}</span>
+                    <span>{item.public ? 'public' : 'private'}</span>
+                  </div>
                 </div>
               );
             })
@@ -78,7 +82,7 @@ export default function Profile() {
           ? data.users_by_pk.likes.map((item) => {
               const snippetCreatedAt = timeAgo(item.snippet.created_at);
               return (
-                <div className="snippetTitle">
+                <div className="snippetLine">
                   <Link href={`/snippet/${item.snippet.id}`}>{item.snippet.title}</Link>
                   <span>{snippetCreatedAt}</span>
                 </div>

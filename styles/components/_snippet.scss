@@ -57,8 +57,8 @@
     .title {
       font-size: $f-base;
     }
-    .meta {
-      font-size: $f-sm;
+    .meta > * {
+      font-size: $f-xs;
     }
     .description {
       font-size: $f-md;

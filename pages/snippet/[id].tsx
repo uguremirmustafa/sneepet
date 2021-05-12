@@ -7,7 +7,6 @@ import {
   InsertLike,
   DeleteLike,
   DeleteSnippet,
-  UpdateSnippet,
   GetPublicSnippets,
 } from '../../lib/queries/snippets';
 import useSWR, { trigger } from 'swr';
@@ -18,13 +17,11 @@ import { formatRelative } from 'date-fns';
 import Link from 'next/link';
 
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
 import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
 import php from 'react-syntax-highlighter/dist/cjs/languages/prism/php';
 import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
 import { materialOceanic } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import SnippetForm from '../../components/SnippetForm';
-SyntaxHighlighter.registerLanguage('jsx', jsx);
 SyntaxHighlighter.registerLanguage('js', js);
 SyntaxHighlighter.registerLanguage('css', css);
 SyntaxHighlighter.registerLanguage('php', php);
@@ -65,13 +62,14 @@ export default function SingleSnippet({ data: initialData }) {
     likes,
     public: isPublic,
   } = data.snippets_by_pk;
-
+  const [optimisticallyLiked, setOptimisticallyLiked] = useState(false);
   const handleLike = async (snippetId) => {
     let temp = { ...data };
     temp.snippets_by_pk.likes_aggregate.aggregate.count = count + 1;
-    mutate({ ...data, temp });
+    mutate({ ...data, temp }, false);
+    setOptimisticallyLiked((v) => !v);
     const res = await fetchGQL(InsertLike, { snippetId });
-    trigger([GetSnippetById, id]);
+    mutate();
     if (res.insert_likes_one) {
       setLikeId(res.insert_likes_one.id);
     }
@@ -80,15 +78,15 @@ export default function SingleSnippet({ data: initialData }) {
   const handleUnlike = async (likeId) => {
     let temp = { ...data };
     temp.snippets_by_pk.likes_aggregate.aggregate.count = count - 1;
-
-    mutate({ ...data, temp });
+    mutate({ ...data, temp }, false);
+    setOptimisticallyLiked((v) => !v);
     await fetchGQL(DeleteLike, { likeId });
-    trigger([GetSnippetById, id]);
+    mutate();
   };
 
   const handleDelete = async (snippetId) => {
     await fetchGQL(DeleteSnippet, { snippetId });
-    router.push('/');
+    router.push('/profile');
   };
 
   const [editing, setEditing] = useState(false);
@@ -106,7 +104,8 @@ export default function SingleSnippet({ data: initialData }) {
     weekStartsOn: 1,
   });
 
-  const userLiked = likes.filter((item) => item.user_id === user?.sub).length > 0;
+  const userLiked =
+    likes.filter((item) => item.user_id === user?.sub).length > 0 || optimisticallyLiked;
   const isOwner = user ? authorId === user?.sub : false;
   if (isFallback) return <div>Loading...</div>;
   return (
@@ -138,6 +137,7 @@ export default function SingleSnippet({ data: initialData }) {
               <div className="language">
                 <Link href={`/language/${slug}`}>{name}</Link>
               </div>
+              {isOwner ? (isPublic ? 'public' : 'private') : ''}
               <div className="like">
                 <p>{count === 0 ? 'no likes' : count > 1 ? `${count} likes` : '1 like'}</p>
                 <svg
