@@ -8,6 +8,7 @@ import {
   DeleteLike,
   DeleteSnippet,
   UpdateSnippet,
+  GetPublicSnippets,
 } from '../../lib/queries/snippets';
 import useSWR, { trigger } from 'swr';
 import { useRouter } from 'next/router';
@@ -62,6 +63,7 @@ export default function SingleSnippet({ data: initialData }) {
     code,
     description,
     likes,
+    public: isPublic,
   } = data.snippets_by_pk;
 
   const handleLike = async (snippetId) => {
@@ -91,6 +93,7 @@ export default function SingleSnippet({ data: initialData }) {
 
   const [editing, setEditing] = useState(false);
   const toggleEditing = () => {
+    trigger(GetPublicSnippets);
     setEditing((v) => !v);
   };
   useEffect(() => {
@@ -118,6 +121,7 @@ export default function SingleSnippet({ data: initialData }) {
           editing={editing}
           toggleEditing={toggleEditing}
           snippetId={id}
+          public={isPublic}
         />
       ) : (
         <>

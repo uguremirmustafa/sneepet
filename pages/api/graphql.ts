@@ -24,9 +24,9 @@ export default async function graphql(req: NextApiRequest, res: NextApiResponse)
     if (admin) {
       headers['x-hasura-admin-secret'] = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
     }
-    const graphQLClient = new GraphQLClient(endpoint);
-    graphQLClient.setHeaders(headers);
-    const data = await graphQLClient.request(query, variables);
+    const userClient = new GraphQLClient(endpoint);
+    userClient.setHeaders(headers);
+    const data = await userClient.request(query, variables);
     res.send(data);
   } catch (error) {
     console.error(error);

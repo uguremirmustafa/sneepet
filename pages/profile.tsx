@@ -1,10 +1,13 @@
 import { UserProfile, useUser } from '@auth0/nextjs-auth0';
+import { formatRelative } from 'date-fns';
 import Link from 'next/link';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import { GetUser } from '../lib/queries/user';
 import fetchGQL from '../utils/fetchql';
+
+let today: Date = new Date();
 
 type UserContext = {
   user?: UserProfile;
@@ -31,8 +34,12 @@ export default function Profile() {
   const onSubmit = () => {
     //TODO update user on hasura
   };
-
+  const timeAgo = (date) =>
+    formatRelative(Date.parse(date), today, {
+      weekStartsOn: 1,
+    });
   if (error || userError) return <div>error</div>;
+
   return (
     <div className="profile">
       <h2>My Profile</h2>
@@ -54,19 +61,29 @@ export default function Profile() {
       <div>
         <h3>My snippets</h3>
         {data
-          ? data.users_by_pk.snippets.map((item) => (
-              <div className="snippetTitle">
-                <Link href={`/snippet/${item.id}`}>{item.title}</Link>
-              </div>
-            ))
+          ? data.users_by_pk.snippets.map((item) => {
+              const snippetCreatedAt = timeAgo(item.created_at);
+
+              return (
+                <div className="snippetTitle">
+                  <Link href={`/snippet/${item.id}`}>{item.title}</Link>
+                  <span>{snippetCreatedAt}</span>
+                  {item.public ? 'public' : 'private'}
+                </div>
+              );
+            })
           : 'loading'}
         <h3>Liked snippets</h3>
         {data
-          ? data.users_by_pk.likes.map((item) => (
-              <div className="snippetTitle">
-                <Link href={`/snippet/${item.snippet.id}`}>{item.snippet.title}</Link>
-              </div>
-            ))
+          ? data.users_by_pk.likes.map((item) => {
+              const snippetCreatedAt = timeAgo(item.snippet.created_at);
+              return (
+                <div className="snippetTitle">
+                  <Link href={`/snippet/${item.snippet.id}`}>{item.snippet.title}</Link>
+                  <span>{snippetCreatedAt}</span>
+                </div>
+              );
+            })
           : 'loading'}
       </div>
     </div>

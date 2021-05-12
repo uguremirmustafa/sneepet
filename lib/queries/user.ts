@@ -5,14 +5,17 @@ export const GetUser = gql`
     users_by_pk(id: $userId) {
       id
       name
-      snippets {
+      snippets(order_by: { updated_at: desc }) {
         title
         id
+        created_at
+        public
       }
-      likes {
+      likes(order_by: { snippet: { likes_aggregate: { count: desc } } }) {
         snippet {
           id
           title
+          created_at
         }
       }
     }

@@ -4,6 +4,8 @@ import fetchGQL from '../utils/fetchql';
 import CodePreview from './Editor';
 import { CreateSnippet, UpdateSnippet } from '../lib/queries/snippets';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { trigger } from 'swr';
 
 type FormValues = {
   title: string;
@@ -14,7 +16,18 @@ type FormValues = {
 };
 
 export default function SnippetForm({ languages, ...rest }) {
-  const { code, description, languageId, title, editing, toggleEditing, snippetId } = rest;
+  const router = useRouter();
+  const {
+    code,
+    description,
+    languageId,
+    title,
+    editing,
+    toggleEditing,
+    snippetId,
+    public: isPublic,
+  } = rest;
+
   const {
     register,
     handleSubmit,
@@ -27,6 +40,7 @@ export default function SnippetForm({ languages, ...rest }) {
       description,
       languageId,
       title,
+      public: isPublic,
     },
   });
   const watchLanguage = watch('languageId');
@@ -37,11 +51,13 @@ export default function SnippetForm({ languages, ...rest }) {
       const res = await fetchGQL(UpdateSnippet, { ...data, snippetId });
       if (res.update_snippets_by_pk.id) {
         toggleEditing();
+        alert(JSON.stringify(res, null, 2));
       }
     } else {
       const res = await fetchGQL(CreateSnippet, data);
       if (res.insert_snippets_one.id) {
         reset();
+        router.push('/profile');
       }
     }
   };
@@ -107,7 +123,7 @@ export default function SnippetForm({ languages, ...rest }) {
             </div>
             <div>
               <label htmlFor="public">Public</label>
-              <input type="checkbox" {...register('public')} defaultChecked />
+              <input type="checkbox" {...register('public')} />
             </div>
           </div>
         </div>

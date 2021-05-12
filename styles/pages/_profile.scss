@@ -28,8 +28,9 @@
   .snippetTitle {
     font-size: $f-base;
     font-weight: 700;
-    &::before {
-      content: '- ';
+    @include flex-bw;
+    &:hover {
+      color: $main-300;
     }
   }
 }

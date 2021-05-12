@@ -2,7 +2,7 @@ import { gql } from 'graphql-request';
 
 export const GetPublicSnippets = gql`
   query GetPublicSnippets {
-    snippets(where: { public: { _eq: true } }, limit: 10, order_by: { created_at: desc }) {
+    snippets(where: { public: { _eq: true } }, limit: 10, order_by: { updated_at: desc }) {
       id
       author {
         name
@@ -48,6 +48,7 @@ export const GetSnippetById = gql`
         name
         id
       }
+      public
       code
       created_at
       updated_at
