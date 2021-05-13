@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GetStaticPropsContext } from 'next';
 import { hasuraAdminClient } from '../../lib/client';
-import { GetLanguageSlugs, GetSnippetByLanguageSlug } from '../../lib/queries/snippets';
+import {
+  DeleteLike,
+  GetLanguageSlugs,
+  GetSnippetByLanguageSlug,
+  InsertLike,
+} from '../../lib/queries/snippets';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import fetchGQL from '../../utils/fetchql';
@@ -18,7 +23,7 @@ export default function Home({ snippets }) {
   const router = useRouter();
   const { slug } = router.query;
 
-  const { data } = useSWR(
+  const { data, mutate } = useSWR(
     user ? GetSnippetByLanguageSlug : null,
     (query) => fetchGQL(query, { slug }),
     {
@@ -27,13 +32,56 @@ export default function Home({ snippets }) {
       initialData: snippets,
     }
   );
+  // const [likeId, setLikeId] = useState('');
+  // const [optimisticallyLiked, setOptimisticallyLiked] = useState(false);
 
+  // const handleLike = async (snippetId) => {
+  //   let temp = { ...data };
+  //   // temp.snippets.likes_aggregate.aggregate.count = (p) => p + 1;
+  //   temp.snippets.map((s) => {
+  //     if (s.id === snippetId) {
+  //       s.likes_aggregate.aggregate.count = (p) => p + 1;
+  //     } else {
+  //       return s;
+  //     }
+  //   });
+  //   setOptimisticallyLiked((v) => !v);
+  //   mutate({ ...data, temp }, false);
+  //   const res = await fetchGQL(InsertLike, { snippetId });
+  //   mutate();
+  //   if (res.insert_likes_one) {
+  //     setLikeId(res.insert_likes_one.id);
+  //   }
+  // };
+
+  // const handleUnlike = async (likeId) => {
+  //   let temp = { ...data };
+  //   temp.snippets.map((s) => {
+  //     if (s.id === likeId) {
+  //       s.likes_aggregate.aggregate.count = (p) => p - 1;
+  //     } else {
+  //       return s;
+  //     }
+  //   });
+  //   setOptimisticallyLiked((v) => !v);
+  //   mutate({ ...data, temp }, false);
+  //   await fetchGQL(DeleteLike, { likeId });
+  //   mutate();
+  // };
   return (
     <div className="home">
       {isLoading && <div>loading...</div>}
       {error && <div>{error.message}</div>}
       {data.snippets.map((item) => (
-        <SnippetPreviewCard key={item.id} snippet={item} />
+        <SnippetPreviewCard
+          key={item.id}
+          snippet={item}
+          // handleLike={handleLike}
+          // likeId={likeId}
+          // userId={user?.sub}
+          // handleUnlike={handleUnlike}
+          // optimisticallyLiked={optimisticallyLiked}
+        />
       ))}
     </div>
   );

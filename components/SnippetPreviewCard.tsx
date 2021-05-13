@@ -4,6 +4,7 @@ import Link from 'next/link';
 let today: Date = new Date();
 
 export default function Snippet({ snippet }) {
+  // const { handleLike, userId, handleUnlike, optimisticallyLiked, likeId } = rest;
   const {
     id,
     title,
@@ -14,12 +15,16 @@ export default function Snippet({ snippet }) {
     },
     created_at,
     updated_at,
+    // likes,
   } = snippet;
   const edited = created_at !== updated_at;
   const timeAgo = formatRelative(Date.parse(edited ? updated_at : created_at), today, {
     weekStartsOn: 1,
   });
-  const userLiked = true;
+
+  // const userLikes = likes.filter((item) => item.user_id === userId);
+
+  // const userLiked = userLikes[0]?.snippet_id === id || optimisticallyLiked;
   return (
     <div className="snippet">
       <div className="content">
@@ -36,11 +41,21 @@ export default function Snippet({ snippet }) {
               <Link href={`/language/${slug}`}>{name}</Link>
             </p>
             <div className="like">
-              <svg viewBox="0 0 24 24" width="20" height="20" className={count > 0 ? 'liked' : ''}>
+              {/* <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                // onClick={
+                //   userLiked
+                //     ? () => handleUnlike(likeId !== '' ? likeId : userLikes[0].id)
+                //     : () => handleLike(id)
+                // }
+                className={userLiked ? 'liked' : ''}
+              >
                 <path fill="none" d="M0 0H24V24H0z" />
                 <path d="M12.001 4.529c2.349-2.109 5.979-2.039 8.242.228 2.262 2.268 2.34 5.88.236 8.236l-8.48 8.492-8.478-8.492c-2.104-2.356-2.025-5.974.236-8.236 2.265-2.264 5.888-2.34 8.244-.228z" />
-              </svg>
-              <p>{count === 0 ? '' : count > 1 ? `${count} likes` : '1 like'}</p>
+              </svg> */}
+              <p>{count === 0 ? 'no likes' : count > 1 ? `${count} likes` : '1 like'}</p>
             </div>
           </div>
           <div className="time">

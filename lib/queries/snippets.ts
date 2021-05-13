@@ -22,6 +22,11 @@ export const GetPublicSnippets = gql`
           count
         }
       }
+      likes {
+        user_id
+        id
+        snippet_id
+      }
     }
   }
 `;
@@ -97,6 +102,11 @@ export const GetSnippetByLanguageSlug = gql`
           count
         }
       }
+      likes {
+        user_id
+        id
+        snippet_id
+      }
     }
   }
 `;
@@ -154,9 +164,14 @@ export const InsertLike = gql`
   }
 `;
 export const DeleteLike = gql`
-  mutation DeleteLike($likeId: uuid!) {
-    delete_likes_by_pk(id: $likeId) {
-      id
+  # mutation DeleteLike($likeId: uuid!) {
+  #   delete_likes_by_pk(id: $likeId) {
+  #     id
+  #   }
+  # }
+  mutation DeleteLike($userId: String!, $snippetId: uuid!) {
+    delete_likes(where: { _and: { user_id: { _eq: $userId }, snippet_id: { _eq: $snippetId } } }) {
+      affected_rows
     }
   }
 `;
