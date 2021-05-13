@@ -2,25 +2,9 @@
 @use "../base/variables" as *;
 .snippet {
   @include box;
-  padding-left: 0;
-  display: grid;
-  grid-template-columns: 6rem 1fr;
   width: 100%;
   overflow-x: hidden;
 
-  .like {
-    grid-row: 1/6;
-    flex-direction: column;
-    @include flex-ctr;
-    font-size: $f-sm;
-    svg {
-      width: $xl;
-      cursor: pointer;
-    }
-    svg.liked {
-      fill: $main-200;
-    }
-  }
   .content {
     .title {
       border-bottom: 1px solid $gray-200;
@@ -35,16 +19,36 @@
       font-size: $f-md;
       @include flex-bw;
       margin-bottom: $md;
-      .language a {
-        padding-left: $xs;
-        color: $main-300;
+      &__left {
+        @include flex-ctr;
+        .language {
+          @include flex-ctr;
+          gap: $sm;
+        }
+        .language a {
+          padding-left: $xs;
+          color: $main-300;
+        }
+        svg {
+          width: $base;
+          cursor: pointer;
+        }
+        .like {
+          margin-left: $base;
+          @include flex-ctr;
+          font-size: $f-sm;
+          gap: $sm;
+          svg.liked {
+            fill: $main-200;
+          }
+        }
       }
       .time {
         @include flex-ctr;
         svg {
-          padding-top: 4px;
-          height: 16px;
-          margin-right: 4px;
+          padding-top: 2px;
+          width: $base;
+          margin-left: 4px;
         }
       }
     }
