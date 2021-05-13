@@ -39,6 +39,14 @@
         padding-left: $xs;
         color: $main-300;
       }
+      .time {
+        @include flex-ctr;
+        svg {
+          padding-top: 4px;
+          height: 16px;
+          margin-right: 4px;
+        }
+      }
     }
     .description {
       margin-top: $sm;
