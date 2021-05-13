@@ -1,10 +1,10 @@
 import { UserProfile, useUser } from '@auth0/nextjs-auth0';
 import { formatRelative } from 'date-fns';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
-import { GetUser } from '../lib/queries/user';
+import { GetUser, UpdateUser } from '../lib/queries/user';
 import fetchGQL from '../utils/fetchql';
 
 let today: Date = new Date();
@@ -28,11 +28,27 @@ export default function Profile() {
   const {
     register,
     handleSubmit,
+    getValues,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({ defaultValues: { name: user?.nickname } });
+  } = useForm<FormValues>();
 
-  const onSubmit = () => {
+  useEffect(() => {
+    if (!data) {
+      return; // loading
+    }
+
+    reset({
+      ...getValues(),
+      name: data.users_by_pk.name,
+    });
+  }, [reset, data, getValues]);
+  const onSubmit = async (data) => {
     //TODO update user on hasura
+    const res = await fetchGQL(UpdateUser, { ...data, userId: user?.sub });
+    if (res.update_users_by_pk.id) {
+      alert('changes saved');
+    }
   };
   const timeAgo = (date) =>
     formatRelative(Date.parse(date), today, {
@@ -45,6 +61,7 @@ export default function Profile() {
       <h2 className="pageTitle">My Profile</h2>
 
       <div className="profileDetails">
+        {user && user.sub}
         <form onSubmit={handleSubmit(onSubmit)}>
           <h3>User Details</h3>
           <label htmlFor="name">Name</label>
@@ -55,6 +72,7 @@ export default function Profile() {
             })}
             type="text"
             id="name"
+            defaultValue={data?.users_by_pk.name}
           />
           {errors.name && <p>{errors.name.message}</p>}
           <button type="submit">{isSubmitting ? 'Saving' : 'Save changes'}</button>
@@ -67,7 +85,7 @@ export default function Profile() {
               const snippetCreatedAt = timeAgo(item.created_at);
 
               return (
-                <div className="snippetLine">
+                <div key={item.id} className="snippetLine">
                   <Link href={`/snippet/${item.id}`}>{item.title}</Link>
                   <div className="snippetMeta">
                     <span>{snippetCreatedAt}</span>

@@ -21,3 +21,11 @@ export const GetUser = gql`
     }
   }
 `;
+export const UpdateUser = gql`
+  mutation UpdateUser($userId: String!, $name: String!) {
+    update_users_by_pk(pk_columns: { id: $userId }, _set: { name: $name }) {
+      name
+      id
+    }
+  }
+`;
