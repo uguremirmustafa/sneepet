@@ -21,9 +21,11 @@ export default function Navbar() {
           <li>
             <Link href="/add">Create a snippet</Link>
           </li>
-          <li>
-            <Link href="/profile">Profile</Link>
-          </li>
+          {user && (
+            <li>
+              <Link href="/profile">Profile</Link>
+            </li>
+          )}
           <li>
             {isLoading && <a>loading...</a>}
             {error && <a>{error.message}</a>}

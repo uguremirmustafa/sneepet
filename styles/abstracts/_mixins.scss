@@ -21,6 +21,13 @@
   width: 100%;
   margin: auto;
 }
+@mixin flex-rnd() {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+}
 
 //pseudo mixin
 @mixin pseudo($loc: before, $content: '', $pos: absolute) {

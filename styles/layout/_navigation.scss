@@ -19,6 +19,9 @@
     }
     ul {
       padding-left: $md;
+      @include media($mobile) {
+        display: none;
+      }
       @include flex-ctr;
       gap: $lg;
       overflow: auto;

@@ -1,0 +1,26 @@
+@use '../abstracts/' as *;
+@use '../base/variables' as *;
+.bottomnav {
+  display: none;
+  @include media($mobile) {
+    @include flex-rnd;
+  }
+  position: fixed;
+  width: 100%;
+  height: 3rem;
+  background-color: $main-300;
+  bottom: 0;
+  left: 0;
+  &__button {
+    fill: white;
+    background-color: $main-300;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    @include flex-ctr;
+    svg {
+      height: 24px;
+    }
+  }
+}
